@@ -1,0 +1,95 @@
+*,
+*::before,
+*::after {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	outline: none !important;
+	scroll-behavior: smooth;
+}
+
+:root {
+	--main-font: "Montserrat", sans-serif;
+	--sub-font: "Nunito", sans-serif;
+	--sub-font2: "Poppins", sans-serif;
+	--og-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+		Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+
+	--main-blue: #3f7afe;
+	--notes-bg: #f6f7fb;
+	--notes-bg-darker: #e5e6ec;
+	--notes-bg-darkest: #bec2ce;
+
+	--light: rgba(255, 255, 255, 0.7);
+
+	/* Font sizes */
+	--smallest: 14px;
+	--smaller: 16px;
+	--small: 18px;
+	--mid: 20px;
+	--big: 25px;
+
+	/* Font weights */
+	--regular: 400;
+	--medium: 500;
+	--semibold: 600;
+	--bold: 700;
+	--extrabold: 800;
+
+	/* Border radius */
+	--little-radius: 8px;
+	--basic-radius: 16px;
+}
+
+body {
+	height: 100vh;
+	width: 100%;
+	font-family: var(--main-font);
+	position: relative;
+}
+
+span {
+	display: block;
+}
+
+ul {
+	list-style: none;
+}
+
+input,
+button {
+	border: none;
+	color: #e8effd;
+	width: 100%;
+}
+
+.draggable-mirror {
+	display: none !important;
+}
+
+.draggable-container--is-dragging,
+.draggable-container--over {
+	outline: none !;
+}
+
+/* @media screen and (max-width: 1280px) {
+	:root {
+		/* Font sizes //
+		--smallest: 12px;
+		--smaller: 14px;
+		--small: 16px;
+		--mid: 18px;
+		--big: 20px;
+	}
+} */
+
+/* @media screen and (max-width: 1024px) {
+	:root {
+		/* Font sizes //
+		--smallest: 10px;
+		--smaller: 12px;
+		--small: 14px;
+		--mid: 16px;
+		--big: 18px;
+	}
+} */
