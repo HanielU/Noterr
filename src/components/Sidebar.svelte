@@ -1,6 +1,6 @@
 <!-- House Categories and navigation -->
 <script>
-	import { username, expanded, categories } from "../store";
+	import { username, expanded } from "../store";
 	import Categories from "./SidebarCategory.svelte";
 	let addingCategory = false; // checks if new category is being added
 	let winHeight = 0;
@@ -8,7 +8,7 @@
 
 <svelte:window bind:innerHeight={winHeight} />
 
-{#if $expanded.fullExpansion === false && $expanded.partExpansion === false && $categories.length > 0}
+{#if $expanded.fullExpansion === false}
 	<nav>
 		<div class="user">
 			<h3 class="user-name">{$username}</h3>

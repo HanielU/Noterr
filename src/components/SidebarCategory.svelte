@@ -3,7 +3,7 @@
 	import { fade } from "svelte/transition";
 	import { flip } from "svelte/animate";
 	import { loremIpsum as lorem } from "lorem-ipsum";
-	import { Note, Category } from "../classes";
+	import { Note, Category } from "../utils";
 	import { activeCategory, categories } from "../store";
 
 	export let addingCategory, winHeight;

@@ -4,24 +4,15 @@
 	import NotePreview from "./components/Notes.svelte";
 	import Note from "./components/Note.svelte";
 	import { setContext } from "svelte";
-	import { categories, activeCategory, expanded } from "./store";
+	import { categories, activeCategory, expanded, username } from "./store";
 	// import Note2 from "./components/NoteRichTxtEditor.svelte";
-
-	let namePresent;
 	let width = 0;
 
-	$: (() => console.log($expanded.partExpansion))();
+	// $: (() => console.log($expanded.partExpansion))();
 
 	$: $expanded.partExpansion = width > 1050 ? false : true;
 
-	$: namePresent = localStorage.getItem("username") ? true : false;
-
-	// unnecessary alternative
-	/* 	$: if (localStorage.getItem("username") === null) {
-		namePresent = false;
-	} else {
-		namePresent = true;
-	} */
+	$: namePresent = $username ? true : false;
 
 	/**
 	 * Makes the parameter (category) to the active category
@@ -72,11 +63,7 @@
 <svelte:window bind:innerWidth={width} />
 
 {#if namePresent}
-	<div
-		class="wrapper"
-		class:flex={($expanded.fullExpansion || $expanded.partExpansion) &&
-			$categories.length > 0}
-	>
+	<div class="wrapper" class:flex={$expanded.fullExpansion}>
 		<Sidebar />
 
 		<NotePreview />
@@ -92,8 +79,8 @@
 	Design Credit: https://dribbble.com/shots/10907311-Notes-App-Category-Screen
 
 	Functionality:
-		- Create Categories
-		- Update Categories (You can do this by double-clicking on the category name in the sidebar)
+		- Create a Category
+		- Update a Category Name (You can do this by double-clicking on the category name in the sidebar)
 		- Delete Categories
 		- Create Notes
 		- Update Notes

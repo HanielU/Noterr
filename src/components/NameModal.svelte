@@ -1,11 +1,11 @@
 <script>
+	import { username } from "../store";
 	export let namePresent = false;
-	export let username = "";
+	export let userNameEdit = "";
 
 	function handleSubmit() {
-		if (!username.trim()) return;
-		localStorage.setItem("username", username);
-		location.reload();
+		if (!userNameEdit.trim()) return;
+		$username = userNameEdit;
 	}
 </script>
 
@@ -15,7 +15,7 @@
 			<input
 				placeholder="Enter Your Username"
 				type="text"
-				bind:value={username}
+				bind:value={userNameEdit}
 			/>
 			<button>Let's Go!</button>
 		</form>

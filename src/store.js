@@ -1,8 +1,8 @@
 import { writable } from "svelte/store";
 import { loremIpsum as lorem } from "lorem-ipsum";
-import { Note, Category } from "./classes";
+import { Note, Category, localStorageStore } from "./utils";
 
-export const username = writable(localStorage.getItem("username"));
+export const username = localStorageStore("username", null);
 
 /**
  * Represents the active category

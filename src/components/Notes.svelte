@@ -2,7 +2,7 @@
 	import { getContext } from "svelte";
 	import Sortable from "sortablejs";
 	import { loremIpsum as lorem } from "lorem-ipsum";
-	import { Note } from "../classes";
+	import { Note } from "../utils";
 	import { activeCategory, categories, expanded } from "../store";
 	import NotePreview from "./NotePreview.svelte";
 
