@@ -14,8 +14,7 @@ export function localStorageStore(key, initial) {
 			if (event.key === key) getAndSetFromLocalStorage();
 		};
 		window.addEventListener("storage", updateFromStorageEvents);
-		return () =>
-			window.removeEventListener("storage", updateFromStorageEvents);
+		return () => window.removeEventListener("storage", updateFromStorageEvents);
 	});
 
 	// Set both the localStorage and this Svelte store
@@ -53,6 +52,12 @@ export class Category {
 }
 
 export class Note {
+	/**
+	 * Blueprint for the note object
+	 *
+	 * @param {string} title - the title of the note
+	 * @param {string} content - the content of the note
+	 */
 	constructor(title, content) {
 		this.id = uuidv4();
 		this.tag = undefined;
@@ -60,13 +65,13 @@ export class Note {
 		this.content = content;
 		this.lastUpdate = "Never";
 		this.words =
-			this.content.trim() === ""
-				? 0
-				: this.content.trim().split(" ").length;
+			this.content.trim() === "" ? 0 : this.content.trim().split(" ").length;
 	}
 
 	/**
 	 * Sets tag of note manually since it's impossible to set from the class constructor
+	 *
+	 * @param {string} categoryName - the category name represents the tag of then note
 	 */
 	setTag(categoryName) {
 		this.tag = categoryName;

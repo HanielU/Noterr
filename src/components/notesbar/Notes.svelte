@@ -2,8 +2,8 @@
 	import { getContext } from "svelte";
 	import Sortable from "sortablejs";
 	import { loremIpsum as lorem } from "lorem-ipsum";
-	import { Note } from "../utils";
-	import { activeCategory, categories, expanded } from "../store";
+	import { Note } from "../../utils";
+	import { activeCategory, categories, expanded } from "../../store";
 	import NotePreview from "./NotePreview.svelte";
 
 	// was needed to toggle controls menu
@@ -34,12 +34,7 @@
 		topOffset = node.offsetTop;
 	}
 
-	/**
-	 * represents $categories = $categories,
-	 * which makes the categories List reactive
-	 */
-	const makeReactive = getContext("categoriesReact");
-	// saves the categories list to local storage
+	// Context Getters
 	const saveCategories = getContext("saveCategories");
 	const activateCategory = getContext("activateCategory");
 	const activate = getContext("activateNote");
@@ -52,7 +47,6 @@
 			if (category.name === $activeCategory) {
 				category.notesCount += 1;
 				category.notes = [...category.notes, newNote];
-				makeReactive(); // makes the categories list reactive
 				saveCategories();
 			}
 		});
@@ -134,20 +128,13 @@
 			<div class="add-note">
 				<button on:click={addNote} title="Add a note">
 					<span>
-						<img
-							src="uicons-regular-rounded/svg/fi-rr-plus-small.svg"
-							alt=""
-						/>
+						<img src="uicons-regular-rounded/svg/fi-rr-plus-small.svg" alt="" />
 					</span>
 					<p>ADD NOTE</p>
 				</button>
 			</div>
 
-			<div
-				class="preview-collection"
-				style={previewStyles}
-				use:getOffsetTop
-			>
+			<div class="preview-collection" style={previewStyles} use:getOffsetTop>
 				<!-- use:toggleSwap -->
 				<NotePreview />
 			</div>

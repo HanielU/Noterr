@@ -3,25 +3,13 @@ import { loremIpsum as lorem } from "lorem-ipsum";
 import { Note, Category, localStorageStore } from "./utils";
 
 export const username = localStorageStore("username", null);
-
-/**
- * Represents the active category
- * Needs to be a writable store for reactivity to take place
- */
-export const activeCategory = writable(
-	localStorage.getItem("activeCategory") || "General"
-);
+export const activeCategory = localStorageStore("activeCategory", "General");
 
 let defaultNote = new Note("General Default", lorem({ count: 4 }));
 defaultNote.setTag("General");
 let defaultCat = new Category("General", false, [defaultNote], defaultNote.id);
 
-/**
- * Represents the entirity of the data handled in this application
- */
-export const categories = writable(
-	JSON.parse(localStorage.getItem("categories")) || [defaultCat]
-);
+export const categories = localStorageStore("categories", [defaultCat]);
 
 export const expanded = writable({
 	partExpansion: false,

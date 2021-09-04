@@ -1,7 +1,7 @@
 <script>
 	import { getContext } from "svelte";
 	import { fade, slide } from "svelte/transition";
-	import { activeCategory, categories } from "../store";
+	import { activeCategory, categories } from "../../store";
 
 	const activate = getContext("activateNote");
 

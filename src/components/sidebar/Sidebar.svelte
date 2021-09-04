@@ -1,10 +1,28 @@
-<!-- House Categories and navigation -->
 <script>
-	import { username, expanded } from "../store";
-	import Categories from "./SidebarCategory.svelte";
-	let addingCategory = false; // checks if new category is being added
+	import { username, expanded } from "../../store";
+	import Categories from "./CategoriesList.svelte";
+	import AddCategory from "../modals/AddCategory.svelte";
 	let winHeight = 0;
+	let currentAction = { value: "adding category", bool: false }; // checks if new category is being added
+	const toggleCategoryAdd = () => (currentAction.bool = !currentAction.bool);
+
+	// used as to check what action is being performed by a modal
+	function handleDispatchData(e) {
+		let dispacthData = e.detail;
+		if (dispacthData.a === currentAction.value) {
+			currentAction.bool = dispacthData.v;
+		} else {
+			return;
+		}
+	}
 </script>
+
+<!-- {@debug addingCategory} -->
+
+<!-- 
+	@component
+	House Categories and navigation	
+ -->
 
 <svelte:window bind:innerHeight={winHeight} />
 
@@ -17,17 +35,13 @@
 		<section class="categories">
 			<div class="categories-header">
 				<h1>CATEGORIES</h1>
-				<span
-					title="Create a Category"
-					on:click={() => (addingCategory = !addingCategory)}
-					><img
-						src="uicons-regular-rounded/svg/fi-rr-plus.svg"
-						alt=""
-					/></span
+				<span title="Create a Category" on:click={toggleCategoryAdd}
+					><img src="uicons-regular-rounded/svg/fi-rr-plus.svg" alt="" /></span
 				>
 			</div>
 
-			<Categories {addingCategory} {winHeight} />
+			<AddCategory {currentAction} on:submit={handleDispatchData} />
+			<Categories {winHeight} />
 		</section>
 	</nav>
 {/if}
@@ -44,6 +58,8 @@
 		width: 100%;
 		padding: 30px 30px 20px;
 		margin-bottom: 10px;
+		display: flex;
+		justify-content: space-between;
 
 		h3 {
 			font-size: var(--smaller);

@@ -1,0 +1,7 @@
+Current Problem:
+  I need a way to notify the 'AddCategory' component of when i am adding a category or editing a category's name(or title )
+
+Question for Svelte discord:
+  I'm building some kind of note app following something I found on dribbble and I've hit a road block.
+I want to use a component to perform two different actions: adding a note category, editing a note category's name
+My question is how do I notify a component that it's going to be performing a different function based on the component that calls it

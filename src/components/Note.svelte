@@ -3,37 +3,20 @@
 	import moment from "moment";
 	import { activeCategory, categories, expanded } from "../store";
 
-	// saves the categories list to local storage
-	const saveCategories = getContext("saveCategories");
-
 	/**
 	 * Gets Current time in the format: `Month Day Year, Hour Minute Secconds am/pm`
 	 */
 	const time = () => moment().format("MMMM Do YYYY, h:mm:ss a");
-
-	/**
-	 * When this function is run, it sets the note given as a parameter to
-	 * become the `active` note which can be edited
-	 */
-	const activate = getContext("activateNote");
-
-	/**
-	 * represents $categories = $categories,
-	 * which makes the categories List reactive
-	 */
-	const makeReactive = getContext("categoriesReact");
-
-	/**
-	 * Used to get the word count
-	 */
-	const getWordCount = getContext("wordCount");
-
 	const expand = () => ($expanded.fullExpansion = !$expanded.fullExpansion);
+
+	// Context Getters
+	const activateNote = getContext("activateNote");
+	const saveCategories = getContext("saveCategories");
+	const getWordCount = getContext("wordCount");
 
 	function updateTitle(note) {
 		note.title = note.title;
 		note.lastUpdate = time();
-		makeReactive();
 		saveCategories();
 	}
 
@@ -41,7 +24,6 @@
 		note.content = note.content;
 		note.words = getWordCount(note.content);
 		note.lastUpdate = time();
-		makeReactive();
 		saveCategories();
 	}
 
@@ -50,8 +32,7 @@
 		category.notes = category.notes.filter(
 			(note) => note.id !== currentNote.id
 		);
-		makeReactive();
-		category.notes.map((note) => activate(note));
+		category.notes.map((note) => activateNote(note));
 		saveCategories();
 		$expanded.fullExpansion = false;
 	}

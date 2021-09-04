@@ -1,7 +1,8 @@
 <script>
-	import NameModal from "./components/NameModal.svelte";
-	import Sidebar from "./components/Sidebar.svelte";
-	import NotePreview from "./components/Notes.svelte";
+	import NameModal from "./components/modals/NameModal.svelte";
+	import DeleteData from "./components/DeleteData.svelte";
+	import Sidebar from "./components/sidebar/Sidebar.svelte";
+	import NotePreview from "./components/notesbar/Notes.svelte";
 	import Note from "./components/Note.svelte";
 	import { setContext } from "svelte";
 	import { categories, activeCategory, expanded, username } from "./store";
@@ -14,55 +15,50 @@
 
 	$: namePresent = $username ? true : false;
 
-	/**
-	 * Makes the parameter (category) to the active category
-	 */
-	function activateCategory(category) {
-		$activeCategory = category.name;
-		localStorage.setItem("activeCategory", $activeCategory);
-	}
+	const activateCategory = (category) => ($activeCategory = category.name);
 
-	/**
-	 * When this function is run, it sets the note given as a parameter to
-	 * become the active note which can be edited
-	 */
+	/** @param {string} content @returns {number} from 0 to content.split(" ").length */
+	const getWordCount = (content) =>
+		content.trim() === "" ? 0 : content.split(" ").length;
+
+	/** @param {Array} newArr */
+	const saveCategories = (newArr) =>
+		($categories = !newArr ? $categories : newArr);
+
 	function activateNote(note) {
 		let activeNoteID = note.id;
 		$categories.forEach((category) => {
 			category.notes.forEach((note) => {
 				if (note.id === activeNoteID) {
 					category.activeNote = note.id;
-					$categories = $categories;
 					saveCategories();
 				}
 			});
 		});
 	}
 
-	function categoriesReact() {
-		$categories = $categories;
-	}
-
-	function getWordCount(content) {
-		return content.trim() === "" ? 0 : content.split(" ").length;
-	}
-
-	function saveCategories() {
-		localStorage.setItem("categories", JSON.stringify($categories));
-	}
-
 	setContext("saveCategories", saveCategories);
 	setContext("wordCount", getWordCount);
-	setContext("categoriesReact", categoriesReact);
 	setContext("activateCategory", activateCategory);
 	setContext("activateNote", activateNote);
+
+	/**
+	 * @function saveCategories - saves the categories list to local storage
+	 * @function getWordCount - Returns the number of words in a string `content`
+	 * @function categoriesReact - Makes "categories" list reactive
+	 * @function activateCategories - makes `category` the active category
+	 * @function activateNote - makes `note` the active note
+	 */
 </script>
+
+<!-- {@debug $categories} -->
 
 <NameModal {namePresent} />
 
 <svelte:window bind:innerWidth={width} />
 
 {#if namePresent}
+	<DeleteData />
 	<div class="wrapper" class:flex={$expanded.fullExpansion}>
 		<Sidebar />
 

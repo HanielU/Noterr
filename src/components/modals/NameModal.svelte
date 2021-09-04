@@ -1,5 +1,5 @@
 <script>
-	import { username } from "../store";
+	import { username } from "../../store";
 	export let namePresent = false;
 	export let userNameEdit = "";
 
