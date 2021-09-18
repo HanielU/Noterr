@@ -41,10 +41,10 @@
 
 	function addNote() {
 		let newNote = new Note(null, lorem({ count: 2 }));
-		newNote.setTag($activeCategory);
+		newNote.tag = $activeCategory.name;
 
 		$categories.forEach((category) => {
-			if (category.name === $activeCategory) {
+			if (category.id === $activeCategory.id) {
 				category.notesCount += 1;
 				category.notes = [...category.notes, newNote];
 				saveCategories();
@@ -60,7 +60,7 @@
 	 */
 	function deleteCategory() {
 		$categories.forEach((category, index) => {
-			if (category.name === $activeCategory) {
+			if (category.id === $activeCategory.id) {
 				let currentCategory = category;
 				$categories = $categories.filter(
 					(category) => category.id !== currentCategory.id
@@ -72,7 +72,7 @@
 						? activateCategory($categories[index])
 						: $categories[index - 1]
 						? activateCategory($categories[index - 1])
-						: activateCategory({ name: "Add A Category" });
+						: activateCategory({ name: "Add A Category", id: "none" });
 				}, 10);
 
 				saveCategories();
@@ -97,28 +97,11 @@
 	// $: console.log($categories);
 </script>
 
-<!-- For development -->
-<svelte:head>
-	<link
-		rel="stylesheet"
-		href="uicons-regular-rounded/css/uicons-regular-rounded.css"
-	/>
-</svelte:head>
-
-<!-- For Codepen -->
-<!-- <svelte:head>
-	<link
-		rel="stylesheet"
-		href="https://cdn.jsdelivr.net/gh/HanielU/Noterr/public/uicons-regular-rounded/css/uicons-regular-rounded.css"
-	/>
-</svelte:head> -->
-
 <svelte:window bind:innerHeight={winHeight} />
-<!-- <svelte:window bind:innerHeight={winHeight} on:click={toggleMenu} /> -->
 {#if $expanded.fullExpansion === false}
 	<section class="notes">
 		<div class="notes-header">
-			<h3>{$activeCategory}</h3>
+			<h3>{$activeCategory.name}</h3>
 			<div class="menu" on:click={deleteCategory} title="Delete Category">
 				<i class="fi-rr-trash" />
 			</div>

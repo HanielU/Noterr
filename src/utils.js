@@ -1,6 +1,28 @@
 import { writable } from "svelte/store";
 import { v4 as uuidv4 } from "uuid";
 
+export function debounce(fn, timeout = 200) {
+	let timer;
+	return (...args) => {
+		clearTimeout(timer);
+		timer = setTimeout(() => {
+			fn.apply(this, args);
+		}, timeout);
+	};
+}
+
+export function debounce_v2(fn, delay) {
+	let timer;
+	return function () {
+		const ctx = this; //context
+		const args = arguments;
+		clearTimeout(timer);
+		timer = setTimeout(() => {
+			fn.apply(ctx, args);
+		}, delay);
+	};
+}
+
 const client = typeof window !== "undefined";
 
 // Custom store to make life easier
@@ -66,18 +88,5 @@ export class Note {
 		this.lastUpdate = "Never";
 		this.words =
 			this.content.trim() === "" ? 0 : this.content.trim().split(" ").length;
-	}
-
-	/**
-	 * Sets tag of note manually since it's impossible to set from the class constructor
-	 *
-	 * @param {string} categoryName - the category name represents the tag of then note
-	 */
-	setTag(categoryName) {
-		this.tag = categoryName;
-	}
-
-	setLastUpdate(lastUpdate) {
-		this.lastupdate = lastUpdate;
 	}
 }

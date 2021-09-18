@@ -17,7 +17,7 @@
 	of that of the current(active Category) then show the notes in that category
 -->
 <!-- For each category in categories if category's name is equal to the active category -->
-{#each $categories.filter((category) => category.name === $activeCategory) as category (category.id)}
+{#each $categories.filter((category) => category.id === $activeCategory.id) as category (category.id)}
 	<!-- Then show that category's notes -->
 	{#each category.notes as note}
 		<article

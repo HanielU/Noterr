@@ -2,9 +2,10 @@
 	import { getContext } from "svelte";
 	import moment from "moment";
 	import { activeCategory, categories, expanded } from "../store";
+	import { debounce, debounce_v2 } from "../utils.js";
 
 	/**
-	 * Gets Current time in the format: `Month Day Year, Hour Minute Secconds am/pm`
+	 * @returns Current time in the format: `Month Day Year, Hour Minute Secconds am/pm`
 	 */
 	const time = () => moment().format("MMMM Do YYYY, h:mm:ss a");
 	const expand = () => ($expanded.fullExpansion = !$expanded.fullExpansion);
@@ -14,18 +15,26 @@
 	const saveCategories = getContext("saveCategories");
 	const getWordCount = getContext("wordCount");
 
-	function updateTitle(note) {
+	function updateTitleFunc(note) {
 		note.title = note.title;
 		note.lastUpdate = time();
 		saveCategories();
 	}
+	// const updateTitle = debounce((note) => updateTitleFunc(note), 500); // added debounce for "better performance"
+	const updateTitle = debounce_v2((note) => {
+		note.title = note.title;
+		note.lastUpdate = time();
+		saveCategories();
+	}, 500); // added debounce for "better performance"
 
-	function updateContent(note) {
-		note.content = note.content;
+	function updateContentFunc(note) {
+		let newcontent = note.content;
+		note.content = newcontent;
 		note.words = getWordCount(note.content);
 		note.lastUpdate = time();
 		saveCategories();
 	}
+	const updateContent = debounce((note) => updateContentFunc(note), 700); // added debounce for "better performance"
 
 	function deleteNote(category, currentNote) {
 		category.notesCount -= 1;
@@ -39,12 +48,12 @@
 </script>
 
 <!-- 
-	Logic: For each category in categories, if the category's name is equal to that 
+	Logic: For each category in categories, if the category's id is equal to that 
   of that of the current(active Category) then for each of the notes in that category,
   if the note's activeNote property is equal to the id of the current note, then display the note
 -->
 <!-- For each category in categories if category's name is equal to the active category -->
-{#each $categories.filter((category) => category.name === $activeCategory) as category (category.id)}
+{#each $categories.filter((category) => category.id === $activeCategory.id) as category (category.id)}
 	<!-- For each note in the category if the category's activeNote corresponds to the current note's id -->
 	{#each category.notes.filter((note) => category.activeNote === note.id) as note (note.id)}
 		<!-- Show activeNote's details -->
@@ -54,7 +63,7 @@
 					type="text"
 					placeholder="Untitled"
 					bind:value={note.title}
-					on:input={updateTitle(note)}
+					on:input={() => updateTitle(note)}
 				/>
 
 				<div class="expand" on:click={expand} title="Expand This Note">
@@ -63,7 +72,7 @@
 
 				<div
 					class="trash"
-					on:click={deleteNote(category, note)}
+					on:click={() => deleteNote(category, note)}
 					title="Delete This Note"
 				>
 					<i class="fi-rr-trash" />
@@ -74,7 +83,7 @@
 				bind:value={note.content}
 				placeholder="Enter A Note"
 				spellcheck="false"
-				on:input={updateContent(note)}
+				on:keyup={() => updateContent(note)}
 			/>
 
 			<footer>

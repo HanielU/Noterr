@@ -12,6 +12,7 @@
 <style lang="scss">
 	.erase {
 		position: fixed;
+		z-index: 999;
 		cursor: pointer;
 		width: fit-content;
 		padding: 20px;

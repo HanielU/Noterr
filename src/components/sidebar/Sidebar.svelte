@@ -1,19 +1,49 @@
 <script>
-	import { username, expanded } from "../../store";
+	// <--	IMPORTS	-->
+	import { username, expanded, currentAction, menuVisible } from "../../store";
 	import Categories from "./CategoriesList.svelte";
-	import AddCategory from "../modals/AddCategory.svelte";
-	let winHeight = 0;
-	let currentAction = { value: "adding category", bool: false }; // checks if new category is being added
-	const toggleCategoryAdd = () => (currentAction.bool = !currentAction.bool);
+	import ManageModal from "../modals/ManageModal.svelte";
+	import { getContext } from "svelte";
 
-	// used as to check what action is being performed by a modal
-	function handleDispatchData(e) {
-		let dispacthData = e.detail;
-		if (dispacthData.a === currentAction.value) {
-			currentAction.bool = dispacthData.v;
-		} else {
-			return;
+	// <--	VAR DECLARATIONS	-->
+	let winHeight = 0;
+	let action = { value: "adding category", bool: false }; // checks if new category is being added
+
+	let manageModalVisible = false;
+	let operations = [
+		{ name: "Erase", function: deleteData, title: "Erase all data" },
+	];
+
+	let styles = `
+		--bg: white;
+		--padding: 15px 20px;
+		--color: black;
+		--top: 100%;
+		--right: 10px;
+	`;
+	let props = { styles, operations };
+
+	// <--	CONTEXT GETTERS	-->
+	const monitorAction = getContext("monitorAction");
+
+	// <--	REACTIVE STATEMENTS	-->
+	$: monitorAction(action);
+	$: checkMenuVisible($menuVisible);
+
+	// <--	FUNCTIONS	-->
+	const toggleCategoryAdd = () =>
+		(action.bool = !$currentAction.requesting.bool);
+	const toggleManage = () => (manageModalVisible = !manageModalVisible);
+
+	function checkMenuVisible(menuVisible) {
+		if (menuVisible === false) {
+			manageModalVisible = false;
 		}
+	}
+
+	function deleteData() {
+		localStorage.clear();
+		window.location.reload();
 	}
 </script>
 
@@ -26,10 +56,24 @@
 
 <svelte:window bind:innerHeight={winHeight} />
 
+<!-- {#if currentAction.bool === true}
+	<AddOrEditCategory {currentAction} on:submit={handleDispatchData} />
+{/if} -->
+
 {#if $expanded.fullExpansion === false}
 	<nav>
 		<div class="user">
 			<h3 class="user-name">{$username}</h3>
+			<div class="manage-app controls" on:click={toggleManage}>
+				<img
+					src="uicons-regular-rounded/svg/fi-rr-menu-dots-vertical.svg"
+					alt=""
+				/>
+
+				{#if manageModalVisible}
+					<ManageModal {...props} />
+				{/if}
+			</div>
 		</div>
 
 		<section class="categories">
@@ -40,7 +84,6 @@
 				>
 			</div>
 
-			<AddCategory {currentAction} on:submit={handleDispatchData} />
 			<Categories {winHeight} />
 		</section>
 	</nav>
@@ -52,6 +95,7 @@
 		width: 100%;
 		background: var(--main-blue);
 		color: #c5d1f0;
+		position: relative;
 	}
 
 	.user {
@@ -60,10 +104,23 @@
 		margin-bottom: 10px;
 		display: flex;
 		justify-content: space-between;
+		align-items: center;
 
 		h3 {
 			font-size: var(--smaller);
 			font-weight: var(--medium);
+		}
+
+		.manage-app {
+			height: 16px;
+			width: 16px;
+			cursor: pointer;
+			position: relative;
+
+			img {
+				height: 100%;
+				pointer-events: none;
+			}
 		}
 	}
 

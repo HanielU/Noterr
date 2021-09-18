@@ -1,25 +1,44 @@
 <script>
+	// <--	IMPORTS	-->
 	import { getContext } from "svelte";
 	import { fade } from "svelte/transition";
 	import { flip } from "svelte/animate";
-	import { activeCategory, categories } from "../../store";
-	import AddCategory from "../modals/AddCategory.svelte";
+	import { activeCategory, categories, currentAction } from "../../store";
 
+	// <--	VAR DECLARATIONS	-->
 	export let winHeight;
-	let editedCategoryName = "";
 	let topOffset = 0;
+	let action = { value: "editing category", bool: false }; // checks if new category is being added
 
-	let currentAction = { value: "editing category", bool: false }; // checks if new category is being added
-
-	// Context Getters
+	// <--	CONTEXT GETTERS	-->
 	const activateCategory = getContext("activateCategory");
 	const saveCategories = getContext("saveCategories");
+	const monitorAction = getContext("monitorAction");
+	const resetCurrentAction = getContext("resetCurrentAction");
+
+	// <--	REACTIVE STATEMENTS	-->
+	$: monitorAction(action);
+	$: editNotify($currentAction);
 
 	// neccessary to calculate the height of preview-collection height
 	// in order for overflow auto to work
 	$: catListStyles = `
 		height: ${winHeight - topOffset}px;
 	`;
+
+	// <--	FUNCTIONS	-->
+	// notifies this component if the action performed by the addoreditcategory modal is editing
+	function editNotify(currentAction) {
+		if (currentAction.done.value === action.value) {
+			$categories.forEach((category) => {
+				if (category.contenteditable === true) {
+					category.contenteditable = false;
+					saveCategories();
+				}
+			});
+			resetCurrentAction();
+		}
+	}
 
 	function getOffsetTop(node) {
 		topOffset = node.offsetTop;
@@ -34,48 +53,8 @@
 	// handles editing of category name
 	function allowEdit(category) {
 		category.contenteditable = true;
-		currentAction.bool = true;
-		console.log(currentAction);
+		action.bool = !$currentAction.requesting.bool;
 		saveCategories();
-	}
-
-	// saves editted category name
-	function saveEdit(e, category) {
-		if (e.key === "Enter") {
-			// avoids two categories with the same name
-			let samename = 0;
-			$categories.forEach((category) => {
-				if (category.name === editedCategoryName) {
-					samename += 1;
-					editedCategoryName = [editedCategoryName, samename];
-					editedCategoryName = editedCategoryName.join("");
-				}
-			});
-			category.name = editedCategoryName;
-			category.contenteditable = false;
-
-			// Updates the note tag
-			category.notes.forEach((note) => {
-				note.tag = category.name;
-			});
-			saveCategories();
-			activateCategory(category);
-		}
-	}
-
-	// Stops edit on focus out
-	function stopEdit(category) {
-		category.contenteditable = false;
-		saveCategories();
-	}
-
-	function handleDispatchData(e) {
-		let dispacthData = e.detail;
-		if (dispacthData.a === currentAction.value) {
-			currentAction.bool = dispacthData.v;
-		} else {
-			return;
-		}
 	}
 </script>
 
@@ -83,15 +62,11 @@
 	{#each $categories as category (category.id)}
 		<div in:fade animate:flip={{ duration: 250 }}>
 			<li
-				class:active={$activeCategory === category.name}
+				class:active={$activeCategory.id === category.id}
 				class:editing={category.contenteditable === true}
 				on:click={() => activateCategory(category)}
 				on:dblclick={() => allowEdit(category)}
 			>
-				{#if category.contenteditable}
-					<AddCategory {currentAction} on:submit={handleDispatchData} />
-				{/if}
-
 				<h3 class="category">
 					{category.name}
 				</h3>
