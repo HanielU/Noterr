@@ -81,6 +81,7 @@
 	.note-content {
 		font-size: var(--smallest);
 		opacity: 0.8;
+		max-width: 34ch;
 	}
 
 	p.empty-notes {

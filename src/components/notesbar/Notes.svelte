@@ -132,7 +132,6 @@
 		width: 100%;
 		background: var(--notes-bg);
 		color: #535968;
-		max-width: 350px;
 		flex: 1;
 
 		&-header {

@@ -138,7 +138,7 @@
 		width: 100%;
 		display: grid;
 		overflow: hidden;
-		grid-template-columns: 0.4fr 0.5fr 1.1fr;
+		grid-template-columns: minmax(200px, 0.4fr) minmax(250px, 0.5fr) 1.1fr;
 		justify-items: center;
 	}
 	.flex {
