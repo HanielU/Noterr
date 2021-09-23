@@ -72,6 +72,7 @@
 		cursor: pointer;
 		padding: 5px 0;
 		text-transform: capitalize;
+		// max-width: 34ch;
 
 		&:hover {
 			text-decoration: underline;
@@ -81,7 +82,7 @@
 	.note-content {
 		font-size: var(--smallest);
 		opacity: 0.8;
-		max-width: 34ch;
+		// max-width: 34ch;
 	}
 
 	p.empty-notes {
