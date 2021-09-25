@@ -30,7 +30,7 @@
 				type="text"
 				bind:value={userNameEdit}
 			/>
-			<button>Let's Go!</button>
+			<button>{!editing ? "Let's Go!" : "Rename"}</button>
 		</form>
 	</div>
 {/if}

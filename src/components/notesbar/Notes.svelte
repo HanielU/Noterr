@@ -39,6 +39,7 @@
 		--top: 190%;
 		--right: 10px;
 		--width: max-content;
+		--box-shadow: 1px 2px 5px 0px #a7a7a7;
 	`;
 	let props = { styles, operations };
 
@@ -114,6 +115,9 @@
 	 * the next category is activated
 	 */
 	function deleteCategory() {
+		manageModalVisible = false;
+		let sure = confirm("Delete this category?");
+		if (!sure) return;
 		$categories.forEach((category, index) => {
 			if (category.id === $activeCategory.id) {
 				let currentCategory = category;
@@ -131,7 +135,6 @@
 				}, 10);
 
 				saveCategories();
-				manageModalVisible = false;
 			}
 		});
 	}

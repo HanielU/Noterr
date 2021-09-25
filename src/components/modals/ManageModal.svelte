@@ -61,7 +61,7 @@
 		border-radius: 8px;
 		overflow: hidden;
 		z-index: 2;
-		box-shadow: 1px 2px 5px 0px #a7a7a7;
+		box-shadow: var(--box-shadow);
 
 		li {
 			padding: var(--padding);

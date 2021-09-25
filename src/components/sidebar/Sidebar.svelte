@@ -12,7 +12,11 @@
 
 	let manageModalVisible = false;
 	let operations = [
-		{ name: "Erase", operFunc: deleteData, title: "Erase all data" },
+		{
+			name: "Clear Data",
+			operFunc: deleteData,
+			title: "Clear all Noterr data",
+		},
 		{ name: "Rename User", operFunc: editUserName, title: "Change User Name" },
 	];
 
@@ -43,6 +47,10 @@
 	}
 
 	function deleteData() {
+		let sure = confirm(
+			"Erase all Noterr Data? \nThis action can not be undone"
+		);
+		if (!sure) return;
 		localStorage.clear();
 		window.location.reload();
 	}
