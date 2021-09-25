@@ -1,12 +1,10 @@
 import { writable } from "svelte/store";
-import { loremIpsum as lorem } from "lorem-ipsum";
-import { Note, Category, localStorageStore } from "./utils";
+import { defaultCat, localStorageStore } from "./utils";
 
-let defaultNote = new Note("General Default", lorem({ count: 4 }));
-defaultNote.tag = "General";
-let defaultCat = new Category("General", false, [defaultNote], defaultNote.id);
-
-export const username = localStorageStore("username", null); //change to "null" when done with development
+export const username = localStorageStore("username", {
+	value: null,
+	editing: false,
+}); //change to "null" when done with development
 
 export const activeCategory = localStorageStore("activeCategory", {
 	name: defaultCat.name,

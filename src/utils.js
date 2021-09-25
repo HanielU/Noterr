@@ -1,5 +1,6 @@
 import { writable } from "svelte/store";
 import { v4 as uuidv4 } from "uuid";
+import { loremIpsum as lorem } from "lorem-ipsum";
 
 export function debounce(fn, timeout = 200) {
 	let timer;
@@ -90,3 +91,12 @@ export class Note {
 			this.content.trim() === "" ? 0 : this.content.trim().split(" ").length;
 	}
 }
+
+let defaultNote = new Note("General Default", lorem({ count: 4 }));
+defaultNote.tag = "General";
+export let defaultCat = new Category(
+	"General",
+	false,
+	[defaultNote],
+	defaultNote.id
+);

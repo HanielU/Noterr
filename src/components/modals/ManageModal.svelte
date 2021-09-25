@@ -5,7 +5,12 @@
 	export let operations = [{}, {}];
 </script>
 
-<ul class="modal" style={styles} transition:fade={{ duration: 250 }}>
+<ul
+	class="modal"
+	style={styles}
+	in:fade={{ duration: 250 }}
+	out:fade={{ duration: 100 }}
+>
 	{#each operations as operation}
 		<li on:click={operation.function} title={operation.title}>
 			{operation.name}
@@ -22,11 +27,16 @@
 		left: var(--left);
 		right: var(--right);
 		color: var(--color);
+		background: var(--bg);
+		border-radius: 8px;
+		overflow: hidden;
 
 		li {
-			background: var(--bg);
 			padding: var(--padding);
 			cursor: pointer;
+			font-family: var(--sub-font);
+			font-size: var(--smallest);
+			color: #535968;
 
 			&:hover {
 				background: var(--notes-bg-darker);

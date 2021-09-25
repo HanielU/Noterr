@@ -1,16 +1,29 @@
 <script>
+	import { onMount } from "svelte";
+
 	import { username } from "../../store";
-	export let namePresent = false;
-	export let userNameEdit = "";
+	let userNameEdit = $username.value || "";
+
+	const resetEdit = () => ($username.editing = false);
+	onMount(resetEdit);
+
+	$: namePresent = $username.value ? true : false;
+	$: editing = $username.editing ? true : false;
 
 	function handleSubmit() {
 		if (!userNameEdit.trim()) return;
-		$username = userNameEdit;
+		$username.value = userNameEdit;
+		$username.editing = false;
 	}
+
+	const cancelEdit = () => {
+		$username.editing = false;
+		userNameEdit = $username.value;
+	};
 </script>
 
-{#if namePresent === false}
-	<div class="modal">
+{#if !namePresent || editing}
+	<div class="modal" on:click|self={cancelEdit}>
 		<form on:submit|preventDefault={handleSubmit}>
 			<input
 				placeholder="Enter Your Username"

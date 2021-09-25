@@ -12,14 +12,16 @@
 	let manageModalVisible = false;
 	let operations = [
 		{ name: "Erase", function: deleteData, title: "Erase all data" },
+		{ name: "Rename User", function: editUserName, title: "Change User Name" },
 	];
 
 	let styles = `
-		--bg: white;
+		--bg: var(--notes-bg);
 		--padding: 15px 20px;
 		--color: black;
-		--top: 100%;
+		--top: 190%;
 		--right: 10px;
+		--width: max-content;
 	`;
 	let props = { styles, operations };
 
@@ -45,6 +47,10 @@
 		localStorage.clear();
 		window.location.reload();
 	}
+
+	function editUserName() {
+		$username.editing = true;
+	}
 </script>
 
 <!-- {@debug addingCategory} -->
@@ -63,7 +69,7 @@
 {#if $expanded.fullExpansion === false}
 	<nav>
 		<div class="user">
-			<h3 class="user-name">{$username}</h3>
+			<h3 class="user-name">{$username.value}</h3>
 			<div class="manage-app controls" on:click={toggleManage}>
 				<img
 					src="uicons-regular-rounded/svg/fi-rr-menu-dots-vertical.svg"
@@ -116,6 +122,7 @@
 			width: 16px;
 			cursor: pointer;
 			position: relative;
+			user-select: none;
 
 			img {
 				height: 100%;

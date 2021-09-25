@@ -20,7 +20,7 @@
 	// $: (() => console.log($expanded.partExpansion))();
 
 	$: $expanded.partExpansion = width > 1050 ? false : true;
-	$: namePresent = $username ? true : false;
+	$: namePresent = $username.value ? true : false;
 
 	const activateCategory = (category) =>
 		($activeCategory = { name: category.name, id: category.id });
@@ -100,13 +100,13 @@
 </svelte:head> -->
 <!-- {@debug $categories} -->
 
-<NameModal {namePresent} />
+<NameModal />
 <AddOrEditCategory />
 
 <svelte:window bind:innerWidth={width} on:click={toggleMenu} />
 
+<DeleteData />
 {#if namePresent}
-	<DeleteData />
 	<div class="wrapper" class:flex={$expanded.fullExpansion}>
 		<Sidebar />
 
