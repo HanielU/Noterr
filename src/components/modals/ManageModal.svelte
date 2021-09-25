@@ -1,9 +1,24 @@
 <script>
+	import { createEventDispatcher } from "svelte";
 	import { fade } from "svelte/transition";
 
+	export let manageModalVisible;
 	export let styles = ``;
 	export let operations = [{}, {}];
+
+	const dispatch = createEventDispatcher();
+	const closeMenu = () => {
+		manageModalVisible = false;
+		dispatch("close", manageModalVisible);
+	};
 </script>
+
+<div
+	class="freeze-bg"
+	class:active={manageModalVisible}
+	on:click={closeMenu}
+	title="close modal"
+/>
 
 <ul
 	class="modal"
@@ -12,13 +27,28 @@
 	out:fade={{ duration: 100 }}
 >
 	{#each operations as operation}
-		<li on:click={operation.function} title={operation.title}>
+		<li on:click={operation.operFunc} title={operation.title}>
 			{operation.name}
 		</li>
 	{/each}
 </ul>
 
 <style lang="scss">
+	.freeze-bg {
+		display: none;
+		position: fixed;
+		top: 0;
+		left: 0;
+		height: 100vh;
+		width: 100%;
+		z-index: 1;
+		cursor: default;
+
+		&.active {
+			display: block;
+		}
+	}
+
 	.modal {
 		position: absolute;
 		height: var(--height);
@@ -30,6 +60,8 @@
 		background: var(--bg);
 		border-radius: 8px;
 		overflow: hidden;
+		z-index: 2;
+		box-shadow: 0.5px 1.5px 2px 0px #535968;
 
 		li {
 			padding: var(--padding);

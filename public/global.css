@@ -12,8 +12,8 @@
 	--main-font: "Montserrat", sans-serif;
 	--sub-font: "Nunito", sans-serif;
 	--sub-font2: "Poppins", sans-serif;
-	--og-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-		Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+	--og-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans,
+		Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 
 	--main-blue: #3f7afe;
 	--notes-bg: #f6f7fb;
@@ -92,4 +92,16 @@ button {
 		--mid: 16px;
 		--big: 18px;
 	}
+} */
+
+.manage-app {
+	height: 16px;
+	width: 16px;
+	cursor: pointer;
+	position: relative;
+	user-select: none;
+}
+/* .manage-app img {
+	height: 100%;
+	pointer-events: none;
 } */

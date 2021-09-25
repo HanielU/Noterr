@@ -1,6 +1,6 @@
 <script>
 	// <--	IMPORTS	-->
-	import { getContext } from "svelte";
+	import { getContext, onMount } from "svelte";
 	import { loremIpsum as lorem } from "lorem-ipsum";
 	import { Note, Category } from "../../utils";
 	import { categories, currentAction } from "../../store";
@@ -10,6 +10,9 @@
 	let actions = ["adding category", "editing category"];
 	let newCategoryName = "";
 	let editing = false;
+
+	const resetEditing = () => (editing = false);
+	onMount(resetEditing);
 
 	// <--	CONTEXT GETTERS	-->
 	const activateCategory = getContext("activateCategory");

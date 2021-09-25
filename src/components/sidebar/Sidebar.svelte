@@ -1,8 +1,9 @@
 <script>
 	// <--	IMPORTS	-->
-	import { username, expanded, currentAction, menuVisible } from "../../store";
+	import { username, expanded, currentAction } from "../../store";
 	import Categories from "./CategoriesList.svelte";
 	import ManageModal from "../modals/ManageModal.svelte";
+	import VerticalMenu from "../svgs/Vertical-Menu.svelte";
 	import { getContext } from "svelte";
 
 	// <--	VAR DECLARATIONS	-->
@@ -11,8 +12,8 @@
 
 	let manageModalVisible = false;
 	let operations = [
-		{ name: "Erase", function: deleteData, title: "Erase all data" },
-		{ name: "Rename User", function: editUserName, title: "Change User Name" },
+		{ name: "Erase", operFunc: deleteData, title: "Erase all data" },
+		{ name: "Rename User", operFunc: editUserName, title: "Change User Name" },
 	];
 
 	let styles = `
@@ -30,17 +31,15 @@
 
 	// <--	REACTIVE STATEMENTS	-->
 	$: monitorAction(action);
-	$: checkMenuVisible($menuVisible);
 
 	// <--	FUNCTIONS	-->
 	const toggleCategoryAdd = () =>
 		(action.bool = !$currentAction.requesting.bool);
+
 	const toggleManage = () => (manageModalVisible = !manageModalVisible);
 
-	function checkMenuVisible(menuVisible) {
-		if (menuVisible === false) {
-			manageModalVisible = false;
-		}
+	function handleDispatchData(e) {
+		manageModalVisible = e.detail;
 	}
 
 	function deleteData() {
@@ -50,6 +49,7 @@
 
 	function editUserName() {
 		$username.editing = true;
+		manageModalVisible = false;
 	}
 </script>
 
@@ -70,14 +70,15 @@
 	<nav>
 		<div class="user">
 			<h3 class="user-name">{$username.value}</h3>
-			<div class="manage-app controls" on:click={toggleManage}>
-				<img
-					src="uicons-regular-rounded/svg/fi-rr-menu-dots-vertical.svg"
-					alt=""
-				/>
+			<div class="manage-app controls">
+				<VerticalMenu on:click={toggleManage} />
 
 				{#if manageModalVisible}
-					<ManageModal {...props} />
+					<ManageModal
+						{manageModalVisible}
+						{...props}
+						on:close={handleDispatchData}
+					/>
 				{/if}
 			</div>
 		</div>
@@ -115,19 +116,6 @@
 		h3 {
 			font-size: var(--smaller);
 			font-weight: var(--medium);
-		}
-
-		.manage-app {
-			height: 16px;
-			width: 16px;
-			cursor: pointer;
-			position: relative;
-			user-select: none;
-
-			img {
-				height: 100%;
-				pointer-events: none;
-			}
 		}
 	}
 

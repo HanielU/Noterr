@@ -1,28 +1,61 @@
 <script>
+	// <--	IMPORTS	-->
 	import { getContext } from "svelte";
 	import Sortable from "sortablejs";
 	import { loremIpsum as lorem } from "lorem-ipsum";
 	import { Note } from "../../utils";
-	import { activeCategory, categories, expanded } from "../../store";
+	import {
+		activeCategory,
+		categories,
+		expanded,
+		currentAction,
+	} from "../../store";
 	import NotePreview from "./NotePreview.svelte";
+	import ManageModal from "../modals/ManageModal.svelte";
+	import HorizontalMenu from "../svgs/Horizontal-Menu.svelte";
 
-	// was needed to toggle controls menu
-	// let menuVisible = false;
-
-	/**
-	 * Was Responsible for toggling the delete button
-	 */
-	/* function toggleMenu(e) {
-		!(
-			e.target.classList.contains("controls") ||
-			e.target.classList.contains("menu")
-		)
-			? (menuVisible = false)
-			: (menuVisible = !menuVisible);
-	} */
-
+	// <--	VAR DECLARATIONS	-->
 	let winHeight = 0;
 	let topOffset = 0;
+	let action = { value: "editing category", bool: false }; // checks if new category is being added
+	let manageModalVisible = false;
+	let operations = [
+		{
+			name: "Delete Category",
+			operFunc: deleteCategory,
+			title: "Delete Current Category",
+		},
+		{
+			name: "Rename Category",
+			operFunc: allowEdit,
+			title: "Change User Name",
+		},
+	];
+
+	let styles = `
+		--bg: var(--notes-bg);
+		--padding: 15px 20px;
+		--color: black;
+		--top: 190%;
+		--right: 10px;
+		--width: max-content;
+	`;
+	let props = { styles, operations };
+
+	function getOffsetTop(node) {
+		topOffset = node.offsetTop;
+	}
+
+	// <--	CONTEXT GETTERS	-->
+	const saveCategories = getContext("saveCategories");
+	const activateCategory = getContext("activateCategory");
+	const activate = getContext("activateNote");
+	const monitorAction = getContext("monitorAction");
+	const resetCurrentAction = getContext("resetCurrentAction");
+
+	// <--	REACTIVE STATEMENTS	-->
+	$: monitorAction(action);
+	$: editNotify($currentAction);
 
 	// neccessary to calculate the height of preview-collection height
 	// in order for overflow auto to work
@@ -30,14 +63,25 @@
 		height: ${winHeight - topOffset}px;
 	`;
 
-	function getOffsetTop(node) {
-		topOffset = node.offsetTop;
+	// <--	FUNCTIONS	-->
+	// notifies this component if the action performed by the addoreditcategory modal is editing
+	function editNotify(currentAction) {
+		if (currentAction.done.value === action.value) {
+			$categories.forEach((category) => {
+				if (category.contenteditable === true) {
+					category.contenteditable = false;
+					saveCategories();
+				}
+			});
+			resetCurrentAction();
+		}
 	}
 
-	// Context Getters
-	const saveCategories = getContext("saveCategories");
-	const activateCategory = getContext("activateCategory");
-	const activate = getContext("activateNote");
+	const toggleManage = () => (manageModalVisible = !manageModalVisible);
+
+	function handleDispatchData(e) {
+		manageModalVisible = e.detail;
+	}
 
 	function addNote() {
 		let newNote = new Note(null, lorem({ count: 2 }));
@@ -52,6 +96,17 @@
 		});
 
 		activate(newNote);
+	}
+
+	function allowEdit() {
+		$categories.forEach((category) => {
+			if (category.id === $activeCategory.id) {
+				category.contenteditable = true;
+				action.bool = !$currentAction.requesting.bool;
+				saveCategories();
+				manageModalVisible = false;
+			}
+		});
 	}
 
 	/**
@@ -76,6 +131,7 @@
 				}, 10);
 
 				saveCategories();
+				manageModalVisible = false;
 			}
 		});
 	}
@@ -102,8 +158,16 @@
 	<section class="notes">
 		<div class="notes-header">
 			<h3>{$activeCategory.name}</h3>
-			<div class="menu" on:click={deleteCategory} title="Delete Category">
-				<i class="fi-rr-trash" />
+			<div class="manage-app controls" on:click|self={toggleManage}>
+				<HorizontalMenu color="#535968" on:click={toggleManage} />
+
+				{#if manageModalVisible}
+					<ManageModal
+						{manageModalVisible}
+						{...props}
+						on:close={handleDispatchData}
+					/>
+				{/if}
 			</div>
 		</div>
 
@@ -141,14 +205,14 @@
 			align-items: center;
 			position: relative;
 
-			i {
-				cursor: pointer;
-				color: #535968;
+			// i {
+			// 	cursor: pointer;
+			// 	color: #535968;
 
-				&:hover {
-					color: red;
-				}
-			}
+			// 	&:hover {
+			// 		color: red;
+			// 	}
+			// }
 		}
 
 		&-content {

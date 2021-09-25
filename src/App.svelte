@@ -5,14 +5,13 @@
 	import Sidebar from "./components/sidebar/Sidebar.svelte";
 	import NotePreview from "./components/notesbar/Notes.svelte";
 	import Note from "./components/Note.svelte";
-	import { setContext } from "svelte";
+	import { onMount, setContext } from "svelte";
 	import {
 		categories,
 		activeCategory,
 		expanded,
 		username,
 		currentAction,
-		menuVisible,
 	} from "./store";
 	// import Note2 from "./components/NoteRichTxtEditor.svelte";
 	let width = 0;
@@ -21,6 +20,8 @@
 
 	$: $expanded.partExpansion = width > 1050 ? false : true;
 	$: namePresent = $username.value ? true : false;
+
+	onMount(resetCurrentAction);
 
 	const activateCategory = (category) =>
 		($activeCategory = { name: category.name, id: category.id });
@@ -45,13 +46,6 @@
 		});
 	}
 
-	function toggleMenu(e) {
-		!e.target.classList.contains("controls")
-			? ($menuVisible = false)
-			: ($menuVisible = true);
-		// console.log(e.target.classList);
-	}
-
 	function monitorAction(action) {
 		if (action.bool) {
 			$currentAction.requesting = action;
@@ -64,8 +58,6 @@
 		$currentAction.requesting = { value: null, bool: null };
 		$currentAction.done = { value: null, bool: null };
 	}
-
-	// $: console.log($menuVisible);
 
 	setContext("saveCategories", saveCategories);
 	setContext("wordCount", getWordCount);
@@ -103,7 +95,7 @@
 <NameModal />
 <AddOrEditCategory />
 
-<svelte:window bind:innerWidth={width} on:click={toggleMenu} />
+<!-- <svelte:window bind:innerWidth={width} on:click={toggleMenu} /> -->
 
 <DeleteData />
 {#if namePresent}
