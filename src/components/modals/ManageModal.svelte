@@ -24,7 +24,7 @@
 	class="modal"
 	style={styles}
 	in:fade={{ duration: 250 }}
-	out:fade={{ duration: 100 }}
+	out:fade={{ duration: 50 }}
 >
 	{#each operations as operation}
 		<li on:click={operation.operFunc} title={operation.title}>
@@ -69,6 +69,7 @@
 			font-family: var(--sub-font);
 			font-size: var(--smallest);
 			color: #535968;
+			// text-align: center;
 
 			&:hover {
 				background: var(--notes-bg-darker);

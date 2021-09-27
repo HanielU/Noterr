@@ -12,8 +12,6 @@ export const activeCategory = localStorageStore("activeCategory", {
 });
 export const categories = localStorageStore("categories", [defaultCat]);
 
-export const menuVisible = writable(false);
-
 export const currentAction = writable({
 	requesting: {
 		value: null,

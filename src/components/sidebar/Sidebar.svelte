@@ -3,7 +3,7 @@
 	import { username, expanded, currentAction } from "../../store";
 	import Categories from "./CategoriesList.svelte";
 	import ManageModal from "../modals/ManageModal.svelte";
-	import VerticalMenu from "../svgs/Vertical-Menu.svelte";
+	import HorizontalMenu from "../svgs/Horizontal-Menu.svelte";
 	import { getContext } from "svelte";
 
 	// <--	VAR DECLARATIONS	-->
@@ -13,11 +13,16 @@
 	let manageModalVisible = false;
 	let operations = [
 		{
+			name: "Create Category",
+			operFunc: toggleCategoryAdd,
+			title: "Create a Category",
+		},
+		{ name: "Rename User", operFunc: editUserName, title: "Change User Name" },
+		{
 			name: "Clear Data",
 			operFunc: deleteData,
 			title: "Clear all Noterr data",
 		},
-		{ name: "Rename User", operFunc: editUserName, title: "Change User Name" },
 	];
 
 	let styles = `
@@ -37,8 +42,10 @@
 	$: monitorAction(action);
 
 	// <--	FUNCTIONS	-->
-	const toggleCategoryAdd = () =>
-		(action.bool = !$currentAction.requesting.bool);
+	function toggleCategoryAdd() {
+		action.bool = !$currentAction.requesting.bool;
+		manageModalVisible = false;
+	}
 
 	const toggleManage = () => (manageModalVisible = !manageModalVisible);
 
@@ -47,9 +54,7 @@
 	}
 
 	function deleteData() {
-		let sure = confirm(
-			"Erase all Noterr Data? \nThis action can not be undone"
-		);
+		let sure = confirm("Erase all Noterr Data? This action can not be undone");
 		if (!sure) return;
 		localStorage.clear();
 		window.location.reload();
@@ -79,7 +84,7 @@
 		<div class="user">
 			<h3 class="user-name">{$username.value}</h3>
 			<div class="manage-app controls">
-				<VerticalMenu on:click={toggleManage} />
+				<HorizontalMenu on:click={toggleManage} />
 
 				{#if manageModalVisible}
 					<ManageModal

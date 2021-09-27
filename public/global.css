@@ -100,6 +100,8 @@ button {
 	cursor: pointer;
 	position: relative;
 	user-select: none;
+	display: grid;
+	place-content: center;
 }
 /* .manage-app img {
 	height: 100%;

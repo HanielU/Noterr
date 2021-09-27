@@ -142,12 +142,18 @@
 {#if $currentAction.requesting.bool === true || editing === true}
 	<div class="modal" on:click|self={cancel}>
 		<form on:submit|preventDefault={handleSubmit}>
+			<div class="title">
+				<h3>New Catgory Name</h3>
+			</div>
 			<input type="text" bind:value={newCategoryName} />
-			<button
-				>{$currentAction.requesting.value === actions[0]
-					? "Create"
-					: "Edit"}</button
-			>
+			<div class="btn-wrapper">
+				<button
+					>{$currentAction.requesting.value === actions[0]
+						? "Create"
+						: "Edit"}</button
+				>
+				<button on:click={cancel}> Cancel </button>
+			</div>
 		</form>
 	</div>
 {/if}
@@ -182,8 +188,20 @@
 			max-width: 500px;
 			height: 300px;
 			background: #fff;
-			padding: 15px;
+			padding: 20px 50px;
 			border-radius: var(--basic-radius);
+
+			.title {
+				width: 100%;
+				padding: 10px;
+				text-align: center;
+
+				h3 {
+					font-size: var(--small);
+					font-family: var(--sub-font);
+					color: #535968;
+				}
+			}
 
 			input {
 				color: #535968;
@@ -195,6 +213,12 @@
 				text-align: center;
 			}
 
+			.btn-wrapper {
+				display: flex;
+				justify-content: space-between;
+				flex-direction: row-reverse;
+			}
+
 			button {
 				color: #fff;
 				padding: 10px;
@@ -203,6 +227,11 @@
 				font-weight: var(--medium);
 				border-radius: 10px;
 				cursor: pointer;
+				width: Clamp(100px, 45%, 230px);
+
+				&:last-child {
+					background: rgb(255, 67, 67);
+				}
 			}
 		}
 	}

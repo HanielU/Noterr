@@ -118,7 +118,7 @@
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			transition: all 250ms ease-in;
+			transition: all 150ms ease;
 
 			&.active {
 				color: #e8effd;

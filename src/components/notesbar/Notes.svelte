@@ -21,14 +21,19 @@
 	let manageModalVisible = false;
 	let operations = [
 		{
-			name: "Delete Category",
-			operFunc: deleteCategory,
-			title: "Delete Current Category",
+			name: "Add a note",
+			operFunc: addNote,
+			title: "Add a note",
 		},
 		{
 			name: "Rename Category",
 			operFunc: allowEdit,
-			title: "Change User Name",
+			title: "Change Current Category Name",
+		},
+		{
+			name: "Delete Category",
+			operFunc: deleteCategory,
+			title: "Delete Current Category",
 		},
 	];
 
@@ -116,7 +121,7 @@
 	 */
 	function deleteCategory() {
 		manageModalVisible = false;
-		let sure = confirm("Delete this category?");
+		let sure = confirm("Delete this category? This action cannot be undone");
 		if (!sure) return;
 		$categories.forEach((category, index) => {
 			if (category.id === $activeCategory.id) {
