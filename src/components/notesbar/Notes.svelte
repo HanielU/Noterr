@@ -102,6 +102,7 @@
 		});
 
 		activate(newNote);
+		manageModalVisible = false;
 	}
 
 	function allowEdit() {
